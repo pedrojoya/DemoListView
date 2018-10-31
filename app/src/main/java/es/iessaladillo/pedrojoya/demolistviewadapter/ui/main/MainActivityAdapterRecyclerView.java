@@ -20,6 +20,11 @@ class MainActivityAdapterRecyclerView extends BaseRecyclerViewAdapter<Student, M
     private OnDeleteListener onDeleteListener;
     private OnShowListener onShowListener;
 
+    public MainActivityAdapterRecyclerView() {
+        // We are managing the id for each item.
+        setHasStableIds(true);
+    }
+
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {

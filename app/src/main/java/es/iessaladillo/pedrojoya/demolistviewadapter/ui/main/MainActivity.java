@@ -2,7 +2,6 @@ package es.iessaladillo.pedrojoya.demolistviewadapter.ui.main;
 
 import android.os.Bundle;
 import android.view.View;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -11,6 +10,10 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import es.iessaladillo.pedrojoya.demolistviewadapter.R;
 import es.iessaladillo.pedrojoya.demolistviewadapter.data.local.model.Student;
 
@@ -26,10 +29,14 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         viewModel = ViewModelProviders.of(this).get(MainActivityViewModel.class);
         setupViews();
+        viewModel.getStudents(false).observe(this, students -> {
+            listAdapter.submitList(students);
+            lblEmptyView.setVisibility(students.size() > 0 ? View.INVISIBLE : View.VISIBLE);
+        });
     }
 
     private void setupViews() {
-        setupListView();
+        setupRecyclerView();
         setupFab();
     }
 
@@ -38,16 +45,16 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(v -> addStudent());
     }
 
-    private void setupListView() {
+    private void setupRecyclerView() {
         lblEmptyView = ActivityCompat.requireViewById(this, R.id.lblEmptyView);
         listAdapter = new MainActivityAdapter();
         listAdapter.setOnDeleteListener(position -> deleteStudent(listAdapter.getItem(position)));
         listAdapter.setOnShowListener(position -> showStudent(listAdapter.getItem(position)));
-        viewModel.getStudents(false).observe(this, students -> {
-            listAdapter.submitList(students);
-            lblEmptyView.setVisibility(students.size() > 0 ? View.INVISIBLE : View.VISIBLE);
-        });
-        ListView lstStudents = ActivityCompat.requireViewById(this, R.id.lstStudents);
+        RecyclerView lstStudents = ActivityCompat.requireViewById(this, R.id.lstStudents);
+        lstStudents.setHasFixedSize(true);
+        lstStudents.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
+        lstStudents.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
+        lstStudents.setItemAnimator(new DefaultItemAnimator());
         lstStudents.setAdapter(listAdapter);
         /* RECOMIENDO USAR LAS OTRAS TÉCNICAS EXPLICADAS.
            LO DEJO A TÍTULO INFORMATIVO.

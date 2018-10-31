@@ -5,6 +5,8 @@ import java.util.Arrays;
 import java.util.List;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 import es.iessaladillo.pedrojoya.demolistviewadapter.data.local.model.Student;
 
 public class Database {
@@ -12,6 +14,7 @@ public class Database {
     private static Database instance;
 
     private final ArrayList<Student> students;
+    private final MutableLiveData<List<Student>> studentsLiveData = new MutableLiveData<>();
 
     private Database() {
 //        students = new ArrayList<>();
@@ -37,6 +40,7 @@ public class Database {
                 new Student(19, "Isidro", 25),
                 new Student(20, "Fulgencio", 49),
                 new Student(21, "Rodolfo", 45)));
+        studentsLiveData.setValue(new ArrayList<>(students));
     }
 
     @NonNull
@@ -47,18 +51,17 @@ public class Database {
         return instance;
     }
 
-    // TODO: Return LiveData instead
-    public List<Student> queryStudents() {
-        return new ArrayList<>(students);
+    public LiveData<List<Student>> queryStudents() {
+        return studentsLiveData;
     }
 
     public void deleteStudent(Student student) {
         students.remove(student);
-        // TODO: Requery and update LiveData.
+        studentsLiveData.setValue(new ArrayList<>(students));
     }
 
     public void insertStudent(Student student) {
         students.add(student);
-        // TODO: Requery and update LiveData.
+        studentsLiveData.setValue(new ArrayList<>(students));
     }
 }

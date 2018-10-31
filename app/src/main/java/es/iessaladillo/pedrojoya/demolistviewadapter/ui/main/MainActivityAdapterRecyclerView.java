@@ -1,6 +1,5 @@
 package es.iessaladillo.pedrojoya.demolistviewadapter.ui.main;
 
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,36 +9,16 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.ViewCompat;
-import androidx.recyclerview.widget.DiffUtil;
-import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 import es.iessaladillo.pedrojoya.demolistviewadapter.R;
+import es.iessaladillo.pedrojoya.demolistviewadapter.base.BaseRecyclerViewAdapter;
 import es.iessaladillo.pedrojoya.demolistviewadapter.data.local.model.Student;
 
-class MainActivityAdapter extends ListAdapter<Student, MainActivityAdapter.ViewHolder> {
+@SuppressWarnings("unused")
+class MainActivityAdapterRecyclerView extends BaseRecyclerViewAdapter<Student, MainActivityAdapterRecyclerView.ViewHolder> {
 
     private OnDeleteListener onDeleteListener;
     private OnShowListener onShowListener;
-
-    MainActivityAdapter() {
-        super(new DiffUtil.ItemCallback<Student>() {
-            @Override
-            public boolean areItemsTheSame(@NonNull Student oldItem, @NonNull Student newItem) {
-                return oldItem.getId() == newItem.getId();
-            }
-
-            @Override
-            public boolean areContentsTheSame(@NonNull Student oldItem, @NonNull Student newItem) {
-                return TextUtils.equals(oldItem.getName(), newItem.getName()) && oldItem.getAge()
-                    == newItem.getAge();
-            }
-        });
-    }
-
-    @Override
-    public Student getItem(int position) {
-        return super.getItem(position);
-    }
 
     @NonNull
     @Override

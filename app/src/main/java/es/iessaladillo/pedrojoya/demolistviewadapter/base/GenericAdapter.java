@@ -12,8 +12,8 @@ import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
 
 // M for Model, VH for ViewHolder
-// TODO: Make VH extends GenericViewHolder. Create an adapterPosition property in GenericViewHolder
-public abstract class GenericAdapter<M, VH> extends BaseAdapter {
+@SuppressWarnings("unused")
+public abstract class GenericAdapter<M, VH extends GenericViewHolder> extends BaseAdapter {
 
     @NonNull
     private List<M> data = new ArrayList<>();
@@ -58,7 +58,7 @@ public abstract class GenericAdapter<M, VH> extends BaseAdapter {
             //noinspection unchecked
             viewHolder = (VH) itemView.getTag();
         }
-        // TODO: set position as new adapterPosition in ViewHolder.
+        viewHolder.setAdapterPosition(position);
         onBindViewHolder(viewHolder, position);
         return itemView;
     }

@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">DemoListViewAdapter</string>
+    <string name="main_no_students_yet">No students yet</string>
+    <string name="main_btnDelete">Delete</string>
 </resources>

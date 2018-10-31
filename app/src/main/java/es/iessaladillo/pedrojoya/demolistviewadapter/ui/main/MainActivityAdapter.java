@@ -1,73 +1,71 @@
 package es.iessaladillo.pedrojoya.demolistviewadapter.ui.main;
 
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.TextView;
 
-import java.util.List;
-
-import androidx.annotation.LayoutRes;
-import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.ViewCompat;
 import es.iessaladillo.pedrojoya.demolistviewadapter.R;
+import es.iessaladillo.pedrojoya.demolistviewadapter.base.GenericAdapter;
 import es.iessaladillo.pedrojoya.demolistviewadapter.data.local.model.Student;
 
-class MainActivityAdapter extends BaseAdapter {
+class MainActivityAdapter extends GenericAdapter<Student, MainActivityAdapter.ViewHolder> {
 
-    @NonNull
-    private final List<Student> data;
-    @LayoutRes
-    private final int layoutResid;
-
-    MainActivityAdapter(@LayoutRes int layoutResid, @NonNull List<Student> data) {
-        this.data = data;
-        this.layoutResid = layoutResid;
+    interface OnDeleteListener {
+        void onDelete(int position);
     }
 
-    @Override
-    public int getCount() {
-        return data.size();
+    interface OnShowListener {
+        void onShow(int position);
     }
 
-    @Override
-    public Object getItem(int position) {
-        return data.get(position);
+    MainActivityAdapter() {
+        super(R.layout.activity_main_item);
+    }
+
+    private OnDeleteListener onDeleteListener;
+
+    private OnShowListener onShowListener;
+
+    void setOnDeleteListener(OnDeleteListener onDeleteListener) {
+        this.onDeleteListener = onDeleteListener;
+    }
+
+    void setOnShowListener(OnShowListener onShowListener) {
+        this.onShowListener = onShowListener;
     }
 
     @Override
     public long getItemId(int position) {
-        return data.get(position).getId();
+        return getItem(position).getId();
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        View itemView;
-        ViewHolder viewHolder;
-        if (convertView == null) {
-            itemView = LayoutInflater.from(parent.getContext()).inflate(layoutResid, parent, false);
-            viewHolder = new ViewHolder(itemView);
-            itemView.setTag(viewHolder);
-        } else {
-            itemView = convertView;
-            viewHolder = (ViewHolder) itemView.getTag();
-        }
-        viewHolder.bind(data.get(position));
-        return itemView;
+    protected void onBindViewHolder(ViewHolder viewHolder, int position) {
+        viewHolder.bind(getItem(position), position);
     }
 
-    private class ViewHolder {
+    @Override
+    protected ViewHolder onCreateViewHolder(View itemView) {
+        return new ViewHolder(itemView);
+    }
+
+    class ViewHolder {
+        private final View itemView;
         private final TextView lblName;
         private final TextView lblAge;
+        private final Button btnDelete;
 
         ViewHolder(View itemView) {
+            this.itemView = itemView;
             lblName = ViewCompat.requireViewById(itemView, R.id.lblName);
             lblAge = ViewCompat.requireViewById(itemView, R.id.lblAge);
+            btnDelete = ViewCompat.requireViewById(itemView, R.id.btnDelete);
         }
 
-        void bind(Student item) {
+        // TODO: Remove position parameter
+        void bind(Student item, int position) {
             if (item.getName().startsWith("B")) {
                 lblName.setTextColor(ContextCompat.getColor(lblName.getContext(), R.color.red));
             } else {
@@ -75,6 +73,14 @@ class MainActivityAdapter extends BaseAdapter {
             }
             lblName.setText(item.getName());
             lblAge.setText(String.valueOf(item.getAge()));
+            if (onDeleteListener != null) {
+                // TODO: Use adapterPosition property instead of position.
+                btnDelete.setOnClickListener(v -> onDeleteListener.onDelete(position));
+            }
+            if (onShowListener != null) {
+                // TODO: Use adapterPosition property instead of position.
+                itemView.setOnClickListener(v -> onShowListener.onShow(position));
+            }
         }
     }
 

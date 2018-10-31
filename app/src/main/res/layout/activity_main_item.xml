@@ -21,4 +21,10 @@
         android:layout_marginTop="@dimen/main_margin"
         tools:text="18"/>
 
+    <Button
+        android:id="@+id/btnDelete"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/main_btnDelete"/>
+
 </LinearLayout>

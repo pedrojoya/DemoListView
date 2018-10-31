@@ -14,6 +14,7 @@ public class Database {
     private final ArrayList<Student> students;
 
     private Database() {
+//        students = new ArrayList<>();
         students = new ArrayList<>(Arrays.asList(
                 new Student(1, "Baldomero", 23),
                 new Student(2, "Germán Ginés", 67),
@@ -46,8 +47,18 @@ public class Database {
         return instance;
     }
 
+    // TODO: Return LiveData instead
     public List<Student> queryStudents() {
         return new ArrayList<>(students);
     }
 
+    public void deleteStudent(Student student) {
+        students.remove(student);
+        // TODO: Requery and update LiveData.
+    }
+
+    public void insertStudent(Student student) {
+        students.add(student);
+        // TODO: Requery and update LiveData.
+    }
 }
